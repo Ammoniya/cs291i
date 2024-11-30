@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS291-1</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: #FFD355;
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+        }
+
+        .video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+            z-index: -1;
+        }
+
+        .gif-container {
+            position: absolute;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        .gif-container img {
+            width: 300px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gif-container img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .gif-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF5733;
+            text-align: center;
+            margin-top: 5px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1.5s ease forwards;
+            animation-delay: 1s;
+        }
+
+        .gif-text span {
+            display: inline-block;
+            animation: textFadeIn 3s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+        }
+
+        @keyframes textFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .top-left {
+            left: 10%;
+            top: 30%;
+            transform: translate(-10%, -30%);
+        }
+
+        .bottom-right {
+            right: 10%;
+            bottom: 30%;
+            transform: translate(10%, 30%);
+        }
+
+        #databaseUpdatedContainer {
+            display: none;
+            position: absolute;
+            top: 10%;
+            left: 20%;
+            transform: translate(-50%, -40%);
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            z-index: 10;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        #databaseUpdatedText {
+            color: #4CAF50;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #newGifContainer {
+            display: none;
+            position: absolute;
+            bottom: 65%;
+            left: 10%;
+            transform: translate(-50%, 0);
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+        }
+
+        #newGifText {
+            color: #FF5733;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+<video class="video-bg" autoplay loop muted>
+    <source src="/static/videos/biteable-cindi-animation-14-working.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<div class="gif-container top-left" id="gifContainer1">
+    <img src="/static/images/MaxT-Loop.webp" alt="GIF 1">
+    <div class="gif-text" id="gifText1">
+        🌞 Today, expect a high of 86 and a low of 72. <br> 🔗 - gsi.org <br>
+        <span>🌱 By the way, it might be a good day to water your plants.</span>
+    </div>
+</div>
+
+<div class="gif-container bottom-right" id="gifContainer2">
+    <img src="/static/images/200w.gif" alt="GIF 2">
+    <div class="gif-text" id="gifText2">🌤️ Sunshine ahead! Plants need water. 🏞️ <br> 🔗 ~ www.wikipedia.org/planthealth</div>
+</div>
+
+<div class="gif-container" id="databaseUpdatedContainer">
+    <img src="/static/images/zXI.gif" alt="Database Updated">
+    <div class="gif-text" id="databaseUpdatedText">💾 Database Updated Successfully! <br> Latest update: { CURRENT DATA }</div>
+</div>
+
+<div class="gif-container" id="newGifContainer">
+    <img src="/static/images/MaxT-Loop.webp" alt="New Animation">
+    <div class="gif-text" id="newGifText">✨ 🌞 Today, expect a high of 86 and a low of 72. <br> 🔗 - gsi.org</div>
+</div>
+
+<script>
+    let clickCount = 0;
+
+    function playSound() {
+        fetch('/play', { method: 'POST' })
+            .then(() => console.log('Playing click sound'))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function handleClick() {
+        clickCount++;
+
+        if (clickCount === 1) {
+            playSound();
+        } else if (clickCount === 2) {
+            playSound();
+            setTimeout(() => showGIFWithText('gifContainer1', 'gifText1'), 500);
+        } else if (clickCount === 3) {
+            playSound();
+            setTimeout(() => showGIFWithText('gifContainer2', 'gifText2'), 500);
+        } else if (clickCount === 4) {
+            playSound();
+            fadeOutGIFs(['gifContainer1', 'gifContainer2']);
+            setTimeout(() => showGIFWithText('databaseUpdatedContainer', 'databaseUpdatedText'), 1000);
+        } else if (clickCount === 5) {
+            playSound();
+            fadeOutGIFs(['databaseUpdatedContainer']);
+            setTimeout(() => showGIFWithText('newGifContainer', 'newGifText'), 500);
+        } else if (clickCount === 6) {
+            playSound();
+            fadeOutGIFs(['newGifContainer']);
+            setTimeout(clearScreen, 1000);
+            clickCount = 0;
+        }
+    }
+
+    function showGIFWithText(containerId, textId) {
+        const gifContainer = document.getElementById(containerId);
+        const gifText = document.getElementById(textId);
+
+        // Update the placeholder with the current date and time for databaseUpdatedText
+        if (containerId === 'databaseUpdatedContainer') {
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleString(); // Formats as "MM/DD/YYYY, HH:MM:SS AM/PM"
+            gifText.innerHTML = `💾 Database Updated Successfully! <br> Latest update: ${formattedDate}`;
+        }
+
+        gifContainer.style.display = 'flex';
+        gifContainer.style.animation = 'fadeIn 1.5s ease forwards';
+        gifText.style.animation = 'fadeInUp 1.5s ease forwards';
+    }
+
+    function fadeOutGIFs(containerIds) {
+        containerIds.forEach(containerId => {
+            const container = document.getElementById(containerId);
+            container.style.animation = 'fadeOut 1s ease forwards';
+            setTimeout(() => {
+                container.style.display = 'none';
+            }, 1000);
+        });
+    }
+
+    function clearScreen() {
+        const gifContainers = document.querySelectorAll('.gif-container');
+        gifContainers.forEach(container => {
+            container.style.display = 'none';
+        });
+    }
+
+    document.body.addEventListener('click', handleClick);
+</script>
+</body>
+</html>

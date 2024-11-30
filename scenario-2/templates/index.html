@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS291-2</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: #3BACAD;
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+        }
+
+        .video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+            z-index: -1;
+        }
+
+        .gif-container {
+            position: absolute;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        #gifContainer2 {
+            right: 10%; /* Adjust as needed for horizontal position */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%);
+            position: absolute;
+        }
+
+        .gif-container img {
+            width: 300px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gif-container img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .gif-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF5733;
+            text-align: center;
+            margin-top: 5px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1.5s ease forwards;
+            animation-delay: 1s;
+        }
+
+        .gif-row-container {
+            display: none;
+            position: absolute;
+            bottom: 15%;
+            left: 60%;
+            transform: translate(-50%, 0);
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        .gif-row-container img {
+            width: 200px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gif-row-container img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .row-text {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+        }
+
+        .gif-row-text {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin-top: 5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+        }
+    </style>
+</head>
+<body>
+<video class="video-bg" autoplay loop muted>
+    <source src="/static/videos/biteable-cindi-animation-08-thinking.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<div class="gif-container" id="gifContainer1">
+    <img src="/static/images/MaxT-Loop.webp" alt="GIF 1">
+    <div class="gif-text">🌞 Expect a high of 86°F and a low of 72°F.<br> 🔗 - gsi.org <br>
+        <span>🌱 By the way, it might be a good day to water your plants.</span></div>
+</div>
+
+<div class="gif-container" id="gifContainer2">
+    <img src="/static/images/200w.gif" alt="GIF 2">
+    <div class="gif-text">🌤️ Sunshine ahead! Time to water the plants! 🏞️ <br> 🔗 ~ www.wikipedia.org/planthealth</div>
+</div>
+
+<div class="gif-row-container" id="gifRowContainer">
+    <div>
+        <img src="/static/images/200i.gif" alt="GIF 1">
+        <div class="gif-row-text">Room temperature <br> is holding steady <br> at a crisp 65°F 🍃</div>
+    </div>
+    <div>
+        <img src="/static/images/lua-smart-planter.webp" alt="GIF 2">
+        <div class="gif-row-text">I'm thirsty 🚰</div>
+    </div>
+    <div>
+        <img src="/static/images/MaxT-Loop.webp" alt="GIF 3">
+        <div class="gif-row-text">It hot outside 🌞</div>
+    </div>
+</div>
+
+<div class="row-text" id="rowText"></div>
+
+<script>
+    let clickCount = 0;
+
+    function playSound() {
+        fetch('/play', {method: 'POST'})
+            .then(() => console.log('Playing click sound'))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function handleClick() {
+        clickCount++;
+
+        if (clickCount === 1) {
+            playSound();
+        } else if (clickCount === 2) {
+            playSound();
+            setTimeout(() => showGIFWithText('gifContainer1'), 500);
+        } else if (clickCount === 3) {
+            playSound();
+            fadeOutGIFs(['gifContainer1']);
+            setTimeout(() => showGIFWithText('gifContainer2'), 500);
+        } else if (clickCount === 4) {
+            playSound();
+            fadeOutGIFs(['gifContainer2']);
+            setTimeout(() => showGIFRowWithText(), 1000);
+        } else if (clickCount === 5) {
+            playSound();
+            fadeOutGIFs(['gifRowContainer']);
+            clickCount = 0;
+        }
+    }
+
+    function showGIFWithText(containerId) {
+        const gifContainer = document.getElementById(containerId);
+        gifContainer.style.display = 'flex';
+        gifContainer.style.animation = 'fadeIn 1.5s ease forwards';
+    }
+
+    function showGIFRowWithText() {
+        const gifRowContainer = document.getElementById('gifRowContainer');
+        const rowText = document.getElementById('rowText');
+
+        gifRowContainer.style.display = 'flex';
+        gifRowContainer.style.animation = 'fadeIn 1.5s ease forwards';
+    }
+
+    function fadeOutGIFs(containerIds) {
+        containerIds.forEach(containerId => {
+            const container = document.getElementById(containerId);
+            container.style.animation = 'fadeOut 1s ease forwards';
+            setTimeout(() => {
+                container.style.display = 'none';
+            }, 1000);
+        });
+    }
+
+    function clearScreen() {
+        const gifContainers = document.querySelectorAll('.gif-container, .gif-row-container');
+        gifContainers.forEach(container => {
+            container.style.display = 'none';
+        });
+    }
+
+    document.body.addEventListener('click', handleClick);
+</script>
+</body>
+</html>
