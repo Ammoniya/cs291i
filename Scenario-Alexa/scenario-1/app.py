@@ -1,3 +1,4 @@
+import os
 import threading
 
 from flask import Flask, render_template
@@ -7,13 +8,14 @@ app = Flask(__name__)
 
 # Audio playlist and index
 VOICE = 0
+PWD = os.getcwd()
 VOICES = [
-    "/Users/ravindudesilva/CS291i-Project/scenario-1/ttsmaker-file-2024-11-29-10-42-27.mp3",
-    "/Users/ravindudesilva/CS291i-Project/scenario-1/ttsmaker-file-2024-11-29-12-27-19.mp3",
-    "/Users/ravindudesilva/CS291i-Project/scenario-1/ttsmaker-file-2024-11-29-12-55-44.mp3",
-    "/Users/ravindudesilva/CS291i-Project/scenario-1/ttsmaker-file-2024-11-29-13-32-12.mp3",
-    "/Users/ravindudesilva/CS291i-Project/scenario-1/ttsmaker-file-2024-11-29-14-0-8.mp3",
-    "/Users/ravindudesilva/CS291i-Project/scenario-1/ttsmaker-file-2024-11-29-12-58-10.mp3"
+    os.path.join(PWD, "scenario-1", "ttsmaker-file-2024-11-29-10-42-27.mp3"),
+    os.path.join(PWD, "scenario-1", "ttsmaker-file-2024-11-29-12-27-19.mp3"),
+    os.path.join(PWD, "scenario-1", "ttsmaker-file-2024-11-29-12-55-44.mp3"),
+    os.path.join(PWD, "scenario-1", "ttsmaker-file-2024-11-29-13-32-12.mp3"),
+    os.path.join(PWD, "scenario-1", "ttsmaker-file-2024-11-29-14-0-8.mp3"),
+    os.path.join(PWD, "scenario-1", "ttsmaker-file-2024-11-29-12-58-10.mp3"),
 ]
 
 # Lock to prevent race conditions
