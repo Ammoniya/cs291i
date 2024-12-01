@@ -1,4 +1,4 @@
-## scenario 1
+## Scenario 1
  
 A person walks into their kitchen and calls out, "Alexa, what's the weather like today?" Alexa responds with a brief weather report, then adds, "By the way, it might be a good day to water your plants." Caught off guard by this unexpected suggestion, the person  asks, "Alexa, why are you telling me to water my plants? How do you even know I have plants?"
 
