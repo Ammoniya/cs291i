@@ -17,3 +17,19 @@ https://github.com/user-attachments/assets/d0ae63f6-2560-43bf-8f39-324729bedc34
 
 An AI analyzes player performance and recommends strategies, but the coach requires explanations to validate the AI's suggestions and adjust tactics accordingly.
 
+Main Interface:
+
+<img width="1280" alt="main_interface" src="https://github.com/user-attachments/assets/4d754d87-1603-45f9-8a6d-30d408a86735">
+
+
+
+AI explanation:
+
+<img width="1280" alt="ai_explanation" src="https://github.com/user-attachments/assets/3b370e2c-73ce-4967-8104-6e8335e8e8d9">
+
+
+
+AI suggestion:
+
+<img width="1280" alt="ai_suggestion" src="https://github.com/user-attachments/assets/a19f1654-a6d1-4e61-999c-efd4b3d8ee61">
+
