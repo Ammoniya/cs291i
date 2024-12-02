@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Suggestion Page</title>
+    <style>
+        /* Reset default margins and paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navigation bar styling */
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between; /* Align items to opposite ends */
+            align-items: center;
+        }
+
+        /* Navigation links styling */
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid white;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Hover effect for navigation links */
+        .navbar a:hover {
+            background-color: white;
+            color: #333;
+        }
+
+        /* Main container below the navbar */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Image styling */
+        .main-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        /* Tooltip styling */
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            max-width: 400px;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+
+        .tooltip-visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Hyperlink styling */
+        .main-container a {
+            font-size: 18px;
+            color: #0066cc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .main-container a:hover {
+            color: #004999;
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .navbar a {
+                margin: 5px 0;
+            }
+
+            .main-container a {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <!-- Previous Video Link aligned to the left -->
+        <a href="#" id="prevVideo">Previous Video</a>
+        <!-- Next Video Link aligned to the right -->
+        <a href="opponent_hit.html" id="nextVideo">Next Video</a>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="main-container">
+        <!-- Displayed Image -->
+        <img src="./media/player_hit_ball_explain.png" alt="Tennis motion analysis with annotations" id="mainImage">
+
+        <!-- Tooltip for additional information -->
+        <div class="tooltip" id="tooltip"></div>
+
+        <!-- Hyperlink below the image -->
+        <a href="tennis_hit_suggestions.html">Do you want to know suggestions from AI?</a>
+    </div>
+
+    <!-- JavaScript for Tooltip -->
+    <script>
+        const image = document.getElementById("mainImage");
+        const tooltip = document.getElementById("tooltip");
+
+        // Map coordinates and text explanations for the image annotations
+        const annotations = [
+            { area: [220, 50, 965-350, 640-425], text: "The player’s stance and motion show strong technique and balance. His torso rotation and lower body alignment are well-coordinated, contributing to power and control. There may be minor refinements possible in foot positioning or follow-through, but overall, his motion is excellent and highly effective." },
+            { area: [1070, 450, 1070+500, 450+50], text: "The ball is striking close to the center, or \"sweet spot,\" of the racket, which is nearly ideal. This positioning likely maximizes control and power, though there might be a slight improvement possible for absolute precision." },
+            { area: [750, 570, 750+1000, 570+50], text: "The contact point is in front of the player, which is effective for offensive play. However, there's a slight chance that meeting the ball a bit earlier could enhance forward momentum even more, providing a slightly better attacking angle." }
+        ];
+
+        image.addEventListener("mousemove", (event) => {
+            const rect = image.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            let matchedAnnotation = annotations.find(ann => 
+                x >= ann.area[0] && x <= ann.area[2] && y >= ann.area[1] && y <= ann.area[3]
+            );
+
+            if (matchedAnnotation) {
+                tooltip.textContent = matchedAnnotation.text;
+                tooltip.style.left = `${event.pageX + 10}px`;
+                tooltip.style.top = `${event.pageY + 10}px`;
+                tooltip.classList.add("tooltip-visible");
+            } else {
+                tooltip.classList.remove("tooltip-visible");
+            }
+        });
+
+        image.addEventListener("mouseout", () => {
+            tooltip.classList.remove("tooltip-visible");
+        });
+        document.getElementById('prevVideo').addEventListener('click', function(event) {
+            event.preventDefault();
+            alert('This is the first video.');
+        });
+    </script>
+</body>
+</html>

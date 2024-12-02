@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Suggestion Page</title>
+    <style>
+        /* Reset default margins and paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navigation bar styling */
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between; /* Align items to opposite ends */
+            align-items: center;
+        }
+
+        /* Navigation links styling */
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid white;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Hover effect for navigation links */
+        .navbar a:hover {
+            background-color: white;
+            color: #333;
+        }
+
+        /* Main container below the navbar */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Image styling */
+        .main-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        /* Tooltip styling */
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            max-width: 400px;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+
+        .tooltip-visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Video container styling */
+        .video-container {
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+
+        /* Responsive video styling */
+        .video-container video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Button styling */
+        .video-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .video-link:hover {
+            background-color: #005f6a;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .navbar a {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <!-- Previous Video Link aligned to the left -->
+        <a href="opponent_hit.html" id="prevVideo">Previous Video</a>
+        <!-- Next Video Link aligned to the right -->
+        <a href="#" id="nextVideo">Next Video</a>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="main-container">
+        <!-- Displayed Image -->
+        <img src="./media/server_hit_suggestion.png" alt="Tennis motion analysis with annotations" id="mainImage">
+
+        <!-- Tooltip for additional information -->
+        <div class="tooltip" id="tooltip"></div>
+
+        <!-- Button to Show Example Video -->
+        <a href="javascript:void(0);" class="video-link" id="showVideoLink">Click to view example video</a>
+
+        <!-- Video Container (Initially Hidden) -->
+        <div class="video-container" id="videoContainer">
+            <!-- Video will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <!-- JavaScript to Handle Tooltip, Video Display, Playback, and Scrolling -->
+    <script>
+        const image = document.getElementById("mainImage");
+        const tooltip = document.getElementById("tooltip");
+
+        // Map coordinates and text explanations for the image annotations
+        const annotations = [
+            { area: [1070, 400, 1070+500, 400+50], text: "By positioning the contact point a bit further in front, he would enhance his ability to drive the shot with greater precision and offensive power." },
+            { area: [810, 220, 810+1000, 220+100], text: "Additionally, focusing on a stronger follow-through could add more topspin and stability to the stroke, making it harder for the opponent to return." }
+        ];
+
+        image.addEventListener("mousemove", (event) => {
+            const rect = image.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            let matchedAnnotation = annotations.find(ann => 
+                x >= ann.area[0] && x <= ann.area[2] && y >= ann.area[1] && y <= ann.area[3]
+            );
+
+            if (matchedAnnotation) {
+                tooltip.textContent = matchedAnnotation.text;
+                tooltip.style.left = `${event.pageX + 10}px`;
+                tooltip.style.top = `${event.pageY + 10}px`;
+                tooltip.classList.add("tooltip-visible");
+            } else {
+                tooltip.classList.remove("tooltip-visible");
+            }
+        });
+
+        image.addEventListener("mouseout", () => {
+            tooltip.classList.remove("tooltip-visible");
+        });
+
+        // Get references to the button and video container
+        const showVideoLink = document.getElementById('showVideoLink');
+        const videoContainer = document.getElementById('videoContainer');
+
+        // Flag to check if video has been loaded
+        let videoLoaded = false;
+
+        // Add click event listener to the button
+        showVideoLink.addEventListener('click', function() {
+            if (!videoLoaded) {
+                // Create the video element
+                const video = document.createElement('video');
+                video.setAttribute('controls', ''); // Show video controls
+                video.setAttribute('preload', 'none'); // Do not preload the video
+                video.setAttribute('width', '560'); // Set width (optional)
+                video.setAttribute('height', '315'); // Set height (optional)
+
+                // Create the source element
+                const source = document.createElement('source');
+                source.setAttribute('src', './media/serve_example.mov'); // Path to your video
+                source.setAttribute('type', 'video/mp4'); // MIME type for .mov
+
+                // Append source to video
+                video.appendChild(source);
+
+                // Append video to container
+                videoContainer.appendChild(video);
+
+                // Set playback speed to 2x once the metadata is loaded
+                video.addEventListener('loadedmetadata', function() {
+                    video.playbackRate = 2.0;
+                });
+
+                // Update flag to prevent reloading the video
+                videoLoaded = true;
+            }
+
+            // Toggle the display of the video container
+            if (videoContainer.style.display === 'none' || videoContainer.style.display === '') {
+                videoContainer.style.display = 'block';
+                showVideoLink.textContent = 'Hide example video';
+
+                // Auto-play the video
+                const videoElement = videoContainer.querySelector('video');
+                if (videoElement) {
+                    videoElement.play().catch(function(error) {
+                        console.error('Error attempting to play the video:', error);
+                    });
+                }
+
+                // Scroll to the video container
+                videoContainer.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                videoContainer.style.display = 'none';
+                showVideoLink.textContent = 'Click to view example video';
+            }
+        });
+        document.getElementById('nextVideo').addEventListener('click', function(event) {
+            event.preventDefault();
+            alert('This is the last video.');
+        });
+    </script>
+</body>
+</html>
