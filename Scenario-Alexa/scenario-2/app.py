@@ -12,7 +12,6 @@ PWD = os.getcwd()
 VOICES = [
     os.path.join(PWD, "scenario-2", "ttsmaker-file-2024-11-29-19-13-51.mp3"),
     os.path.join(PWD, "scenario-2", "ttsmaker-file-2024-11-29-12-27-19.mp3"),
-    os.path.join(PWD, "scenario-2", "ttsmaker-file-2024-11-29-12-55-44.mp3"),
     os.path.join(PWD, "scenario-2", "ttsmaker-file-2024-11-29-19-24-28.mp3"),
     os.path.join(PWD, "scenario-2", "ttsmaker-file-2024-11-29-12-58-10.mp3"),
 ]
