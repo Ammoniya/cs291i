@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennis Player Performance Analysis</title>
+    <style>
+        /* Reset default margins and paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation bar styling */
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between; /* Align items to opposite ends */
+            align-items: center;
+        }
+
+        /* Navigation links styling */
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid white;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Hover effect for navigation links */
+        .navbar a:hover {
+            background-color: white;
+            color: #333;
+        }
+
+        /* Main container below the navbar */
+        .main-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 60px); /* Adjust height based on navbar */
+        }
+
+        /* Left section for the match video */
+        .video-section {
+            flex: 2;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Right section containing image and evaluation */
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            border-left: 1px solid #ccc;
+        }
+
+        /* Analysis section hidden initially */
+        .analysis-section {
+            display: flex; /* Hidden by default */
+            flex: 1;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Top part of the right section for captured image */
+        .images-section {
+            flex: 1;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Image styling */
+        .images-section img {
+            max-width: 100%;
+            max-height: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Bottom part of the right section for AI evaluation */
+        .evaluation-section {
+            flex: 2;
+            overflow-y: auto;
+        }
+
+        /* Individual evaluation item */
+        .evaluation-item {
+            margin-bottom: 15px;
+        }
+
+        /* Dimension name styling */
+        .dimension {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Star rating container */
+        .stars {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Individual star styling */
+        .star {
+            font-size: 20px;
+            margin-right: 3px;
+        }
+
+        /* Red stars for 1-2 rating */
+        .red {
+            color: red;
+        }
+
+        /* Yellow stars for 3 rating */
+        .yellow {
+            color: orange;
+        }
+
+        /* Green stars for 4-5 rating */
+        .green {
+            color: green;
+        }
+
+        /* AI Confidence Section */
+        .confidence-section {
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        /* Suggestions text styling */
+        .suggestions {
+            margin-top: 20px;
+        }
+
+        .suggestions p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .suggestions ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .suggestions li {
+            margin-bottom: 5px;
+        }
+
+        .suggestions a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #0066cc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .suggestions a:hover {
+            color: #004999;
+            text-decoration: underline;
+        }
+
+        /* Style for the audio icon */
+        #audioIcon {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            /* Optional: Add some opacity */
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        #audioIcon:hover {
+            opacity: 1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .video-section, .right-section {
+                flex: none;
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #ccc;
+            }
+
+            .images-section img {
+                width: 100%;
+            }
+
+            .navbar {
+                justify-content: space-between; /* Maintain space between links */
+            }
+
+            .navbar a {
+                margin-left: 10px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <!-- Previous Video Link aligned to the left -->
+        <a href="tennis_hit.html" id="prevVideo">Previous Video</a>
+        <!-- Next Video Link aligned to the right -->
+        <a href="serve_hit.html" id="nextVideo">Next Video</a>
+    </div>
+
+    <!-- Main container below the navbar -->
+    <div class="main-container">
+        <!-- Left side: Match video section -->
+        <div class="video-section">
+            <!-- Video player displaying the match video -->
+            <!-- Removed 'autoplay' to disable automatic playback on page load -->
+            <video id="matchVideo" width="100%" height="auto" controls muted>
+                <!-- Multiple source elements for different video formats -->
+                <source src="./media/tennis_opponent.mov" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <!-- Audio Icon -->
+            <img 
+                src="./media/Speaker_Icon.svg.png" 
+                alt="Play Audio" 
+                title="Play Audio" 
+                id="audioIcon"
+            >
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var video = document.getElementById('matchVideo');
+
+                if (video) {
+                    // Set playback rate to 2x when the video starts playing
+                    video.playbackRate = 2;
+
+                    video.addEventListener('play', function() {
+                        video.playbackRate = 2;
+                    });
+
+                    // When metadata is loaded, set the video to its end
+                    video.addEventListener('loadedmetadata', function() {
+                        // Ensure the video duration is available
+                        if (video.duration) {
+                            // Set the current time to the video's duration to display the last frame
+                            video.currentTime = video.duration;
+                        }
+                    });
+                } else {
+                    console.error("Can't find video!");
+                }
+            });
+        </script>
+
+        <!-- Right side: AI analysis section -->
+        <div class="right-section">
+
+            <!-- Analysis content hidden initially -->
+            <div class="analysis-section" id="analysisSection">
+                <!-- Top part: Captured image of hitting moment -->
+                <div class="images-section">
+                    <!-- Example captured image -->
+                    <img src="./media/opponent_hit_ball.png" alt="Hitting Moment">
+                </div>
+
+                <!-- Bottom part: AI evaluation and suggestions -->
+                <div class="evaluation-section">
+                    <!-- Evaluation Dimension 1 -->
+                    <div class="evaluation-item">
+                        <div class="dimension">Preparation Stance</div>
+                        <div class="stars">
+                            <!-- Example with 2 stars (red) -->
+                            <span class="star red">&#9733;</span>
+                            <span class="star red">&#9733;</span>
+                            <span class="star">&#9734;</span>
+                            <span class="star">&#9734;</span>
+                            <span class="star">&#9734;</span>
+                        </div>
+                    </div>
+
+                    <!-- Evaluation Dimension 2 -->
+                    <div class="evaluation-item">
+                        <div class="dimension">Positioning</div>
+                        <div class="stars">
+                            <!-- Example with 3 stars (yellow) -->
+                            <span class="star yellow">&#9733;</span>
+                            <span class="star yellow">&#9733;</span>
+                            <span class="star yellow">&#9733;</span>
+                            <span class="star">&#9734;</span>
+                            <span class="star">&#9734;</span>
+                        </div>
+                    </div>
+
+                    <!-- Add more evaluation dimensions as needed -->
+
+                    <!-- AI Confidence Percentage -->
+                    <div class="confidence-section">
+                        <strong>AI Confidence:</strong> 74%
+                    </div>
+
+                    <!-- Improvement suggestions -->
+                    <div class="suggestions">
+                        <p><strong>Suggestions:</strong></p>
+                        <ul>
+                            <li>Hold racket forward.</li>
+                            <li>Bend knees more.</li>
+                            <li>Adopt dynamic stance.</li>
+                        </ul>
+                        <a href="opponent_hit_details.html">Click to get details</a>
+                

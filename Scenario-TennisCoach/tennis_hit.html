@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Playback</title>
+    <style>
+        /* Reset default styles and define layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid white;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .navbar a:hover {
+            background-color: white;
+            color: #333;
+        }
+        .main-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 60px);
+        }
+        .video-section {
+            flex: 2;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .right-section {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            border-left: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="#" id="prevVideo">Previous Video</a>
+        <a href="opponent_hit.html" id="nextVideo">Next Video</a>
+    </div>
+
+    <div class="main-container">
+        <!-- Video Section -->
+        <div class="video-section">
+            <video id="matchVideo" width="100%" height="auto" controls autoplay muted>
+                <source src="./media/tennis_hit.mov" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            Waiting for AI analysis to complete...
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('matchVideo');
+            
+            // Ensure the video plays at 2x speed
+            if (video) {
+                video.playbackRate = 2;
+                video.addEventListener('play', function() {
+                    video.playbackRate = 2;
+                });
+            } else {
+                console.error("Video not found!");
+            }
+
+            // Redirect to analysis page after video ends
+            video.addEventListener('ended', function() {
+                window.location.href = 'tennis_hit_result.html';
+            });
+        });
+        document.getElementById('prevVideo').addEventListener('click', function(event) {
+            event.preventDefault();
+            alert('This is the first video.');
+        });
+    </script>
+</body>
+</html>
