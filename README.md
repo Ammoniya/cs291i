@@ -39,7 +39,13 @@ AI-Powered Loan Decision Assistant: Making Financial Decisions Transparent and U
 
 Interface:
 
+![image](https://github.com/user-attachments/assets/cca603be-2359-49e4-870f-d837976ed42f)
+![image](https://github.com/user-attachments/assets/c1007497-7270-4525-a99f-d036b34c52a6)
+
+
 AI explanation:
 
-AI suggestion:
+![image](https://github.com/user-attachments/assets/00414e01-ceff-4eec-ada8-a023ac2a419e)
+
+
 
