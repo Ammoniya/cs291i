@@ -33,3 +33,13 @@ AI suggestion:
 
 <img width="1280" alt="ai_suggestion" src="https://github.com/user-attachments/assets/a19f1654-a6d1-4e61-999c-efd4b3d8ee61">
 
+## Scenario 3
+
+AI-Powered Loan Decision Assistant: Making Financial Decisions Transparent and Understandable
+
+Interface:
+
+AI explanation:
+
+AI suggestion:
+
